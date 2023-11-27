@@ -1,0 +1,123 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <!-- Add your CSS and Bootstrap links here -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+<body class="bg-light" style="background-image: url({% static 'images/img_4.jpg' %}); background-size: cover; background-position: center;">
+
+    <div class="container mt-4">
+        <div class="card">
+            <div class="card-header">
+                <h1 class="text-center mt-3">User Profile</h1>
+            </div>
+            <div class="card-body">
+                <form method="post" action="{% url 'user_profile' %}">
+                    {% csrf_token %}
+
+                    <div class="mb-3">
+                        <label for="id_name" class="form-label">Name:</label>
+                        {{ form.name }}
+                    </div>
+                    <input type="hidden" name="user" value="{{ request.user.id }}">
+                    <div class="mb-3">
+                        <label for="id_dob" class="form-label">Date of Birth:</label>
+                        {{ form.dob }}
+                        <small class="text-muted">Format: YYYY-MM-DD</small>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="id_age" class="form-label">Age:</label>
+                        {{ form.age }}
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="id_gender" class="form-label">Gender:</label>
+                        {{ form.gender }}
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="id_phone_number" class="form-label">Phone Number:</label>
+                        {{ form.phone_number }}
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="id_mail_id" class="form-label">Mail ID:</label>
+                        {{ form.mail_id }}
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="id_address" class="form-label">Address:</label>
+                        {{ form.address }}
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="id_address" class="form-label">District:</label>
+                        {{ form.district }}
+                    </div>
+
+                    <!-- Branch Field -->
+                    <div class="mb-3">
+                        <label for="id_branch" class="form-label">Branch:</label>
+                        <select id="id_branch" name="branch" class="form-select" required>
+                            <option value="" selected disabled>Select Branch</option>
+                            <!-- Add branches for other districts similarly -->
+                        </select>
+                        <small class="text-danger">{{ form.branch.errors }}</small>
+                    </div>
+
+                    <!-- Add other form fields here -->
+                    <div class="mb-3">
+                        <label class="form-label">Materials Provide:</label>
+                        {{ form.materials_provide }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Account Type:</label>
+                        {{ form.account_type  }}
+                    </div>
+                    {{ form.errors }}
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+        integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+
+    <script>
+        $('#id_district').change(function () {
+            var district = $(this).val();
+            $.ajax({
+                method: 'GET',
+                url: '/get-branches',
+                data: {
+                    district: district,
+                },
+                dataType: 'json',
+                success: function(response) {
+                    $("#id_branch").empty();
+                    console.log(response.branches);
+                    branches = JSON.parse(response.branches);
+
+                    console.log(branches.length);
+                    for (let i = 0; i < branches.length; i++) {
+                        let name = branches[i].name;
+                        let id = branches[i].id;
+                        $("#id_branch").append('<option value="'+ id +'">' + name + '</option>');
+                    }
+                }
+            })
+        });
+    </script>
+    <!-- Add your JS and Bootstrap JS links here -->
+</body>
+</html>

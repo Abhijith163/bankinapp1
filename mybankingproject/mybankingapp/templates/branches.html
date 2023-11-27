@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Branches - My Banking App</title>
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="{% url 'login' %}">Login</a></li>
+            <li><a href="{% url 'register' %}">Register</a></li>
+            <li>Branches
+                <ul>
+                    {% for branch in branches %}
+                        <li><a href="{% url 'district_wikipedia' branch %}">{{ branch }}</a></li>
+                    {% endfor %}
+                </ul>
+            </li>
+        </ul>
+    </nav>
+    <h1>Branches</h1>
+    <!-- Display branches here -->
+</body>
+</html>
